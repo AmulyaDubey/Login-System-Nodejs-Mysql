@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql");
 const dotenv = require("dotenv");
+const path= require('path')
 
 const app = express(); //start the express server
 
@@ -15,7 +16,9 @@ const db = mysql.createConnection({
   port: 8889,
 });
 
+const publicDirectory= path.join(__dirname, "./public")
 app.set("view engine", "hbs")
+app.use(express.static(publicDirectory)) // so that express uses the static files (css or js files)
 
 db.connect((err) => {
   if (err) console.log(err);
@@ -23,7 +26,11 @@ db.connect((err) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("<h1>Home Page</h1>");
+  res.render("index")
+});
+
+app.get("/register", (req, res) => {
+  res.render("register")
 });
 
 app.listen(5000, () => {
